@@ -1,4 +1,5 @@
 import logo from './logo.svg';
+import test from './images/test.png'
 import './App.scss';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         >
           Learn React
         </a>
+        <img src={test}/>
       </header>
     </div>
   );
