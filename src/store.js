@@ -4,8 +4,11 @@ let isDarkMode = createSlice({
   name : 'isDarkMode',
   initialState : false,
   reducers: {
-    changeMode(state) {
-      return !state
+    darkMode: (state) => {
+      return state = true
+    },
+    lightMode: (state) => {
+      return state = false
     }
   }
 })
@@ -15,4 +18,4 @@ export default configureStore({
     isDarkMode: isDarkMode.reducer
   }
 })
-export let { changeMode } = isDarkMode.actions;
+export let { darkMode, lightMode } = isDarkMode.actions;
