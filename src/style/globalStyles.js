@@ -16,14 +16,19 @@ const GlobalStyle = createGlobalStyle`
   html, body {
     height: 100%;
     font-family: 'Noto Sans KR', sans-serif;
-    font-weight: 400;
+    font-weight: 300;
     font-size: 16px;
     transition: background-image 0.5s;
   }
   #root, .App {
     height: inherit;
-  } .App {
+  } 
+  .App {
     position: relative;
+  }
+  button, input, textarea, select, option {
+    font-family: inherit;
+    border: 0;
   }
 `
 
