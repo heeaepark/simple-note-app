@@ -1,4 +1,5 @@
-import { useNavigate, } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Routes, Route, useNavigate, } from 'react-router-dom'
 import styled from 'styled-components';
 /* components */
 import { Button, BtnWrap } from './../components/Buttons';
@@ -6,6 +7,7 @@ import { Button, BtnWrap } from './../components/Buttons';
 import { flexCenterBetween, flexColCenterStart } from './../style/flex';
 import palette from "./../style/palette";
 import txtSize from '../style/txtSize';
+import { Detail } from './Detail';
 
 
 const Search = styled.div`
@@ -74,58 +76,79 @@ const NoteCotent = styled.div`
 
 const List = function(){
   const navigate = useNavigate();
+  
+  let getNoteList = localStorage.getItem('noteList');
+  getNoteList = JSON.parse(getNoteList);
+
+  const [noteList, setNoteList] = useState(getNoteList);
+  const selectList = ['최근생성순', '최근수정순'];
+  const [selected, setSelected] = useState('최근생성순');
+
+  useEffect(() => {
+    if(selected === '최근생성순') {
+      const sortCreate = noteList.sort(function(a, b) {
+        if (a.creatAt > b.creatAt) {
+          return -1
+        } else if (a.creatAt < b.creatAt) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+      let copy = [...sortCreate];
+      setNoteList(copy);
+    } else if (selected === '최근수정순') {
+      const sortModi = noteList.sort(function(a, b) {
+        if (a.updateAt > b.updateAt) {
+          return -1
+        } else if (a.updateAt < b.updateAt) {
+          return 1
+        } else {
+          return 0
+        }
+      })
+      let copy = [...sortModi];
+      setNoteList(copy);
+    }
+  }, [selected])
 
   return(
     <>
       <Search>
         <SearchInput type="text" placeholder='검색' />
-          <Select>
-            <option>최근수정순</option>
-            <option>최근등록순</option>
-            <option>글자순</option>
+          <Select defaultValue={selected} onChange={(e)=> { setSelected(e.target.value); }}>
+            {
+              selectList.map((item) => {
+                return(
+                  <option value={ item } key={ item }> { item } </option>
+                )
+              })
+            }
           </Select>
       </Search>
       <ScrollFix>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
-        <Note>
-          <h2 className='noteTit'>야호호</h2>
-          <p className='noteDate'>2022-09-30</p>
-        </Note>
+        <NoteCotent>
+          {
+            noteList.map((val,idx) => {
+              return(
+                <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} thisNote={ noteList[idx] }>
+                  <h2 className='noteTit'>{ noteList[idx].title }</h2>
+                  <p className='noteDate'>{ noteList[idx].creatAt }</p>
+                </Note>
+              )
+            })
+
+          }
+          <Routes>
+            {
+              noteList.map((val,idx) => {
+                return(
+                  <Route key={idx} path="/detail/:id" element={ <Detail /> } />
+                )
+              })
+            }
+          </Routes>
+        </NoteCotent>
       </ScrollFix>
       <BtnWrap className='only'>
         <Button onClick={() => { navigate('/detail') }} palette={palette.blue}>새 노트</Button>

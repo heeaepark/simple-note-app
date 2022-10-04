@@ -1,5 +1,4 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { ThemeProvider } from 'styled-components';
 import { Routes, Route, useNavigate, } from 'react-router-dom'
@@ -21,6 +20,13 @@ import palette from "./style/palette";
 function App() {
   const isDarkMode = useSelector((state) => {return state.isDarkMode});
   const navigate = useNavigate();
+
+  useEffect(()=> {
+    if(localStorage.getItem('noteList') === null) {
+      localStorage.setItem('noteList', JSON.stringify( [] ));
+    }
+  }, [])
+
   return (
     <ThemeProvider theme={isDarkMode ? darkTheme : lightTheme}>
         <GlobalStyle />
@@ -37,7 +43,7 @@ function App() {
             </BtnWrap> */}
             <Routes>
               <Route path="/" element={<List />}></Route>
-              <Route path="/detail" element={<Detail />}></Route>
+              <Route path="/detail:id" element={<Detail />}></Route>
             </Routes>
           </Container>
         </div>
