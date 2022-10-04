@@ -43,7 +43,7 @@ function App() {
             </BtnWrap> */}
             <Routes>
               <Route path="/" element={<List />}></Route>
-              <Route path="/detail:id" element={<Detail />}></Route>
+              {/* <Route path="/detail:id" element={<Detail />}></Route> */}
             </Routes>
           </Container>
         </div>

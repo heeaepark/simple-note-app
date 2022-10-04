@@ -140,13 +140,7 @@ const List = function(){
 
           }
           <Routes>
-            {
-              noteList.map((val,idx) => {
-                return(
-                  <Route key={idx} path="/detail/:id" element={ <Detail /> } />
-                )
-              })
-            }
+            <Route path="/detail/:id" element={ <Detail /> } />
           </Routes>
         </NoteCotent>
       </ScrollFix>
