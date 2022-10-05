@@ -131,17 +131,13 @@ const List = function(){
           {
             noteList.map((val,idx) => {
               return(
-                <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} thisNote={ noteList[idx] }>
+                <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} >
                   <h2 className='noteTit'>{ noteList[idx].title }</h2>
                   <p className='noteDate'>{ noteList[idx].creatAt }</p>
                 </Note>
               )
             })
-
           }
-          <Routes>
-            <Route path="/detail/:id" element={ <Detail /> } />
-          </Routes>
         </NoteCotent>
       </ScrollFix>
       <BtnWrap className='only'>
