@@ -17,6 +17,7 @@ const Note = styled.div`
     margin-bottom: 0;
   }
   .noteTit {
+    min-height: 20px;
     margin-bottom: 8px;
     font-size: ${txtSize.medium};
     font-weight: 500;
@@ -35,7 +36,7 @@ const NoteContent = function(props) {
         return(
           <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} >
             <h2 className='noteTit'>{ noteList[idx].title }</h2>
-            <p className='noteDate'>{ noteList[idx].creatAt }</p>
+            <p className='noteDate'>{ noteList[idx].updateAt } 수정했어요.</p>
           </Note>
         )
       })

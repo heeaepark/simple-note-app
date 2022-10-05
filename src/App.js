@@ -44,7 +44,7 @@ function App() {
             <Routes>
               <Route path="/" element={<List />}></Route>
               <Route path="/detail" element={<Detail />}>
-                <Route path=":id" element={<Detail />} />
+                <Route path=":paramsId" element={<Detail />} />
               </Route>
             </Routes>
           </Container>

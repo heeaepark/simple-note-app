@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, } from 'react-router-dom'
+import { useParams } from "react-router"
 import styled from 'styled-components';
 import {v4 as uuidv4} from 'uuid';//uuid import
 import moment from 'moment'; //timestamp moment.js import
@@ -43,11 +44,27 @@ const NoteTextarea = styled.textarea`
 
 const Detail = function() {
   const navigate = useNavigate();
+  const { paramsId } = useParams();
   const id = uuidv4();
-  const timeStapmp = moment().format('YYYYMMDDHHmmss');
+  const timeStamp = moment().format('YYYYMMDDHHmmss');
   const [noteTit, setNoteTit] = useState('');
   const [noteBody, setNoteBody] = useState('');
+  let getNoteList = localStorage.getItem('noteList');
+  getNoteList = JSON.parse(getNoteList);
+  const thisNote = getNoteList.find(v => v.id == paramsId);
   
+
+  useEffect(() => {
+
+    if ( paramsId === undefined ) {
+      setNoteTit('');
+      setNoteBody('');
+    } else if (paramsId === thisNote.id) {
+      setNoteTit(thisNote.title)
+      setNoteBody(thisNote.body)
+    }
+  },[])
+
   //input value 가져오기
   const getTit = function(e){
     const input = e.target.value
@@ -73,26 +90,16 @@ const Detail = function() {
 
   //localstorage에 데이터 저장하기
   const createNote = function(){
-    let getNoteList = localStorage.getItem('noteList');
-    getNoteList = JSON.parse(getNoteList);
     getNoteList.push({
       id: id,
       title: noteTit,
       body: noteBody,
-      creatAt: timeStapmp,
-      updateAt: timeStapmp,
+      creatAt: timeStamp,
+      updateAt: timeStamp,
     });
     localStorage.setItem('noteList', JSON.stringify(getNoteList));
     navigate('/');
   }
-
-  const setNote = function(){
-    let getNoteList = localStorage.getItem('noteList');
-    getNoteList = JSON.parse(getNoteList);
-    setNoteTit(getNoteList[0].title)
-    setNoteBody(getNoteList[0].body)
-  }
-
 
   return(
     <>
@@ -102,8 +109,21 @@ const Detail = function() {
       <NoteInput value={ noteTit } onChange={ getTit } id='note-title' type="text" placeholder='노트 제목을 입력해주세요.' />
       <NoteTextarea value= { noteBody } style={{whiteSpace: 'pre-wrap'}} onChange= { getContent } id='note-body' placeholder='노트 내용을 입력해주세요.'/>
       <BtnWrap>
-        <Button onClick={ setNote } palette={palette.red}>노트 제거</Button>
-        <Button onClick={ createNote } palette={palette.blue}>확인</Button>
+        <Button palette={palette.red}>노트 제거</Button>
+        <Button onClick={() => {
+          if(paramsId === undefined) {
+            createNote();
+          } else {
+            const input = document.querySelector('#note-title');
+            const txtarea = document.querySelector('#note-body');
+            const noteIdx = getNoteList.findIndex(v => v.id == paramsId);
+            getNoteList[noteIdx].title = input.value;
+            getNoteList[noteIdx].body = txtarea.value;
+            getNoteList[noteIdx].updateAt = timeStamp;
+            localStorage.setItem('noteList', JSON.stringify(getNoteList));
+            navigate('/');
+          }
+        }} palette={palette.blue}>확인</Button>
       </BtnWrap>
     </>
   )
