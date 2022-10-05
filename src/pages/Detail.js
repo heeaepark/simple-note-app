@@ -52,6 +52,7 @@ const Detail = function() {
   let getNoteList = localStorage.getItem('noteList');
   getNoteList = JSON.parse(getNoteList);
   const thisNote = getNoteList.find(v => v.id == paramsId);
+  const noteIdx = getNoteList.findIndex(v => v.id == paramsId);
   
 
   useEffect(() => {
@@ -69,7 +70,6 @@ const Detail = function() {
   const getTit = function(e){
     const input = e.target.value
     setNoteTit(input);
-    console.log(noteTit);
   }
 
 
@@ -77,15 +77,8 @@ const Detail = function() {
   const getContent = function(e) {
     const textarea = e.target.value
     setNoteBody(textarea);
-    console.log(noteBody);
   }
 
-
-  const setContent = function() {
-    const replaceTxt = noteBody.replaceAll("<br>", "\n");
-    const textarea = document.querySelector('#note-body')
-    textarea.value(replaceTxt);
-  }
 
 
   //localstorage에 데이터 저장하기
@@ -108,15 +101,23 @@ const Detail = function() {
       </BtnWrap>
       <NoteInput value={ noteTit } onChange={ getTit } id='note-title' type="text" placeholder='노트 제목을 입력해주세요.' />
       <NoteTextarea value= { noteBody } style={{whiteSpace: 'pre-wrap'}} onChange= { getContent } id='note-body' placeholder='노트 내용을 입력해주세요.'/>
-      <BtnWrap>
-        <Button palette={palette.red}>노트 제거</Button>
+      <BtnWrap className={paramsId === undefined ? 'only' : null}>
+        {
+          paramsId === undefined ? null : 
+          <Button onClick={() => {
+            const copy = [...getNoteList];
+            copy.splice(noteIdx, 1);
+            localStorage.setItem('noteList', JSON.stringify(copy));
+            navigate('/');
+          }} palette={palette.red}>노트 제거</Button>
+        }
         <Button onClick={() => {
           if(paramsId === undefined) {
             createNote();
           } else {
             const input = document.querySelector('#note-title');
             const txtarea = document.querySelector('#note-body');
-            const noteIdx = getNoteList.findIndex(v => v.id == paramsId);
+            
             getNoteList[noteIdx].title = input.value;
             getNoteList[noteIdx].body = txtarea.value;
             getNoteList[noteIdx].updateAt = timeStamp;

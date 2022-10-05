@@ -60,6 +60,7 @@ const List = function(){
   const [noteList, setNoteList] = useState(getNoteList);
   const selectList = ['최근생성순', '최근수정순'];
   const [selected, setSelected] = useState('최근생성순');
+  const [searchValue, setSearchValue] = useState('')
 
   useEffect(() => {
     if((localStorage.getItem('noteList') != null)) {
@@ -89,12 +90,30 @@ const List = function(){
         setNoteList(copy);
       }
     }
-  }, [selected])
+  }, [selected, searchValue])
 
+  /* 검색창 input value 가져오기 */
+  const getSearchValue = function(e){
+    const getValue = e.target.value;
+    setSearchValue(getValue);
+    const copy = [...getNoteList];
+    console.log(getValue);
+
+    if (getValue != '') {
+      const result = copy.filter((itemList) => {
+        if(itemList.title.toUpperCase().includes(searchValue.toUpperCase())) {
+          return itemList
+        }
+      });
+      setNoteList(result);
+    } else {
+      setNoteList(getNoteList);
+    }
+  }
   return(
     <>
       <Search>
-        <SearchInput type="text" placeholder='검색' />
+        <SearchInput type="text" placeholder='검색' onChange={ getSearchValue } />
           <Select defaultValue={selected} onChange={(e)=> { setSelected(e.target.value); }}>
             {
               selectList.map((item) => {
