@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Routes, Route, useNavigate, } from 'react-router-dom'
 import styled from 'styled-components';
+/* pages */
+import { Detail } from './Detail';
 /* components */
 import { Button, BtnWrap } from './../components/Buttons';
+import { NoteContent } from '../components/NoteContent'
 /* style */
 import { flexCenterBetween, flexColCenterStart } from './../style/flex';
 import palette from "./../style/palette";
-import txtSize from '../style/txtSize';
-import { Detail } from './Detail';
 
 
 const Search = styled.div`
@@ -48,30 +49,6 @@ const ScrollFix = styled.div`
   margin-bottom: 20px;
 `
 
-const Note = styled.div`
-  ${ flexColCenterStart }
-  height: 84px;
-  padding: 16px;
-  margin-bottom: 8px;
-  color: ${(props) => {return props.theme.textColor}};
-  background-color: ${(props) => {return props.theme.noteInput.bgColor}};
-  border-radius: 8px;
-  &:last-child  {
-    margin-bottom: 0;
-  }
-  .noteTit {
-    margin-bottom: 8px;
-    font-size: ${txtSize.medium};
-    font-weight: 500;
-  }
-  .noteDate {
-    font-size: ${txtSize.small};
-    color: ${(props) => {return props.theme.subTextColor}};
-  }
-`
-const NoteCotent = styled.div`
-
-`
 
 
 const List = function(){
@@ -85,30 +62,32 @@ const List = function(){
   const [selected, setSelected] = useState('최근생성순');
 
   useEffect(() => {
-    if(selected === '최근생성순') {
-      const sortCreate = noteList.sort(function(a, b) {
-        if (a.creatAt > b.creatAt) {
-          return -1
-        } else if (a.creatAt < b.creatAt) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-      let copy = [...sortCreate];
-      setNoteList(copy);
-    } else if (selected === '최근수정순') {
-      const sortModi = noteList.sort(function(a, b) {
-        if (a.updateAt > b.updateAt) {
-          return -1
-        } else if (a.updateAt < b.updateAt) {
-          return 1
-        } else {
-          return 0
-        }
-      })
-      let copy = [...sortModi];
-      setNoteList(copy);
+    if((localStorage.getItem('noteList') != null)) {
+      if(selected === '최근생성순') {
+        const sortCreate = noteList.sort(function(a, b) {
+          if (a.creatAt > b.creatAt) {
+            return -1
+          } else if (a.creatAt < b.creatAt) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+        let copy = [...sortCreate];
+        setNoteList(copy);
+      } else if (selected === '최근수정순') {
+        const sortModi = noteList.sort(function(a, b) {
+          if (a.updateAt > b.updateAt) {
+            return -1
+          } else if (a.updateAt < b.updateAt) {
+            return 1
+          } else {
+            return 0
+          }
+        })
+        let copy = [...sortModi];
+        setNoteList(copy);
+      }
     }
   }, [selected])
 
@@ -127,18 +106,7 @@ const List = function(){
           </Select>
       </Search>
       <ScrollFix>
-        <NoteCotent>
-          {
-            noteList.map((val,idx) => {
-              return(
-                <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} >
-                  <h2 className='noteTit'>{ noteList[idx].title }</h2>
-                  <p className='noteDate'>{ noteList[idx].creatAt }</p>
-                </Note>
-              )
-            })
-          }
-        </NoteCotent>
+        <NoteContent noteList={ noteList } />
       </ScrollFix>
       <BtnWrap className='only'>
         <Button onClick={() => { navigate('/detail') }} palette={palette.blue}>새 노트</Button>
