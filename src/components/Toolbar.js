@@ -32,6 +32,7 @@ const Toolbar = function(){
   const dispatch = useDispatch();
 
   const toggleOnClick = function(){
+    localStorage.setItem('theme', isDarkMode);
     if(isDarkMode === false) {
       dispatch(darkMode());
     } 

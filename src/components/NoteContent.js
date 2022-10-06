@@ -1,8 +1,9 @@
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import moment from 'moment'; //timestamp moment.js import
+import 'moment/locale/ko'; // moment.js kor ver
 /* style */
 import { flexCenterBetween, flexColCenterStart } from '../style/flex';
-import palette from "../style/palette";
 import txtSize from '../style/txtSize';
 
 const Note = styled.div`
@@ -27,6 +28,7 @@ const Note = styled.div`
     color: ${(props) => {return props.theme.subTextColor}};
   }
 `
+
 const NoteContent = function(props) {
   const navigate = useNavigate();
   const noteList = props.noteList;
@@ -34,9 +36,9 @@ const NoteContent = function(props) {
     return (
       noteList.map((val,idx) => {
         return(
-          <Note onClick={() => { navigate('/detail/'+noteList[idx].id) }} key={idx} >
+          <Note onClick={() => { navigate(process.env.PUBLIC_URL + '/detail/'+ noteList[idx].id) }} key={idx} >
             <h2 className='noteTit'>{ noteList[idx].title }</h2>
-            <p className='noteDate'>{ noteList[idx].updateAt } 수정했어요.</p>
+            <p className='noteDate'>{ moment(noteList[idx].updateAt, 'YYYY-MM-DD HH:mm:ss').fromNow() } 수정했어요.</p>
           </Note>
         )
       })

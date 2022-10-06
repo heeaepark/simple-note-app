@@ -4,6 +4,7 @@ import { useParams } from "react-router"
 import styled from 'styled-components';
 import {v4 as uuidv4} from 'uuid';//uuid import
 import moment from 'moment'; //timestamp moment.js import
+import 'moment/locale/ko'; // moment.js kor ver
 /* components */
 import { Button, BtnWrap } from './../components/Buttons';
 /* style */
@@ -46,7 +47,7 @@ const Detail = function() {
   const navigate = useNavigate();
   const { paramsId } = useParams();
   const id = uuidv4();
-  const timeStamp = moment().format('YYYYMMDDHHmmss');
+  const timeStamp = moment().format('YYYY-MM-DD HH:mm:ss');
   const [noteTit, setNoteTit] = useState('');
   const [noteBody, setNoteBody] = useState('');
   let getNoteList = localStorage.getItem('noteList');
@@ -91,7 +92,7 @@ const Detail = function() {
       updateAt: timeStamp,
     });
     localStorage.setItem('noteList', JSON.stringify(getNoteList));
-    navigate('/');
+    navigate(process.env.PUBLIC_URL + '/');
   }
 
   return(
@@ -108,7 +109,7 @@ const Detail = function() {
             const copy = [...getNoteList];
             copy.splice(noteIdx, 1);
             localStorage.setItem('noteList', JSON.stringify(copy));
-            navigate('/');
+            navigate(process.env.PUBLIC_URL + '/');
           }} palette={palette.red}>노트 제거</Button>
         }
         <Button onClick={() => {
@@ -122,7 +123,7 @@ const Detail = function() {
             getNoteList[noteIdx].body = txtarea.value;
             getNoteList[noteIdx].updateAt = timeStamp;
             localStorage.setItem('noteList', JSON.stringify(getNoteList));
-            navigate('/');
+            navigate(process.env.PUBLIC_URL + '/');
           }
         }} palette={palette.blue}>확인</Button>
       </BtnWrap>

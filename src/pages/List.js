@@ -128,7 +128,7 @@ const List = function(){
         <NoteContent noteList={ noteList } />
       </ScrollFix>
       <BtnWrap className='only'>
-        <Button onClick={() => { navigate('/detail') }} palette={palette.blue}>새 노트</Button>
+        <Button onClick={() => { navigate(process.env.PUBLIC_URL + '/detail') }} palette={palette.blue}>새 노트</Button>
       </BtnWrap> 
     </>
   )
